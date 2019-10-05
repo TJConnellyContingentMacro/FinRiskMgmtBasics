@@ -1,0 +1,122 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+1) (5 pts) Assume that a stock's log returns at any time scale have normal distribution. Suppose that its average annual  log return is 100%, and its annual standard deviation ("volatility") of log returns is 200%. What are its average (mu) and standard deviation (sigma) of daily log returns, assuming a year has 250 trading days? 
+```{r}
+DailyRet = 1.00/250
+
+DailyVol = 2.00/sqrt(250)
+
+print(DailyRet)
+print(DailyVol)
+
+```
+
+```{r warning=FALSE}
+library(formattable)
+seed <- 2015
+set.seed(seed)
+
+
+r=rnorm(250,mean=DailyRet, DailyVol)
+net = exp(r) - 1
+
+#Need to convert these log returns to non-log.  
+
+#barplot(r)
+#hist(r)
+
+m <- mean(net)
+vol <- sd(net)
+print(paste('---Period is days based on 250 per year with seed set to: ', seed))
+
+
+print(paste('Mean (m) Daily Return: ',percent(m)))
+
+print(paste('StdDev (s) per period: ', percent(vol)))
+
+```
+Q3 ---
+Compute the quantity: m - (variance/2) . How does this compare with the average log return mu computed in part 1)?
+```{r}
+print(paste('Exp.Rtn.WITH NET RTNS (average less half the variance): ', percent(m - ((vol^2) / 2))))
+```
+Q3 Continued --  
+So divide a year into 25,000 sub-periods (think of these sub-periods roughly as minutes) instead, and compare the new mu (average log return per minute) with the new m less half the variance (m is now the average net return per minute). Also compare the new sigma (standard deviation of log returns per minute) with the new s (standard deviation of net return per minute). 
+
+```{r}
+seed <- 2015
+set.seed(seed)
+HowManyPeriods = 25000
+
+DailyRet = 1.00/HowManyPeriods
+
+DailyVol = 2.00/sqrt(HowManyPeriods)
+
+
+UsingNet = TRUE
+
+
+
+r=rnorm(HowManyPeriods,mean=DailyRet, DailyVol)
+if (UsingNet){
+  r = exp(r) - 1
+}
+
+m <- mean(r)
+vol <- sd(r)
+print(paste('---Period is based on ', HowManyPeriods,' using net is ', UsingNet,' with seed set to: ', seed))
+
+
+print(paste('Mean (m) period Return: ',percent(m,4)))
+
+print(paste('StdDev (s) per period: ', percent(vol)))
+
+print(paste('Exp.Rtn. WITH Net set to ', UsingNet, '(average less half the variance): ', percent(m - ((vol^2) / 2),4)))
+```
+
+```{r}
+seed <- 2015
+set.seed(seed)
+HowManyPeriods = 25000
+
+DailyRet = 1.00/HowManyPeriods
+
+DailyVol = 2.00/sqrt(HowManyPeriods)
+
+UsingNet = FALSE
+
+
+
+
+r=rnorm(HowManyPeriods,mean=DailyRet, DailyVol)
+if (UsingNet){
+  r = exp(r) - 1
+}
+
+m <- mean(r)
+vol <- sd(r)
+print(paste('---Period is based on ', HowManyPeriods,' using net is ', UsingNet,' with seed set to: ', seed))
+
+
+print(paste('Mean (m) period Return: ',percent(m,4)))
+
+print(paste('StdDev (s) per period: ', percent(vol)))
+
+print(paste('Exp.Rtn. WITH Net set to ', UsingNet, '(average less half the variance): ', percent(m - ((vol^2) / 2),4)))
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
